@@ -53,12 +53,18 @@
         {
           nixpkgs.config.allowUnfree = true;
           environment.systemPackages = with pkgs; [
+            zoxide
             vim
             neovim
             git
             tmux
             zsh
+            go
             oh-my-posh
+            htop
+            air
+            pnpm
+            nodejs
           ];
           services = {
             nix-daemon.enable = true;
@@ -125,19 +131,9 @@
 
             masApps = {
               # Xcode = 497799835;
-              Spotify = 1252022953;
-              Slack = 803453959;
-              SequelAce = 1287023582;
-              Postman = 1276838705;
-              Obsidian = 1626738013;
-              WhatsApp = 1346203926;
-              Medis = 1626738013;
-              Telegram = 1462935693;
               OktaVerify = 490179405;
-              Zoom = 1252022953;
-              ChatGPT = 1626738013;
             };
-            # taps = [ "homebrew/services" ];
+            taps = [ ];
             brews = [
               "wget"
               "curl"
@@ -147,8 +143,16 @@
               "zsh"
               "oh-my-posh"
               "neovim"
+              "maven"
+              "graphviz"
+              "terraform"
+              "localstack"
+              # "mongodb/brew/mongodb-community"
+              # "mongodb/brew/mongosh"
+              # "mongodb/brew/mongodb-database-tools"
             ];
             casks = [
+              "studio-3t"
               "google-chrome"
               "cursor"
               "trae"
@@ -158,8 +162,19 @@
               # "webull"
               "podman-desktop"
               "alfred"
+              "medis"
+              "obsidian"
+              "sequel-ace"
+              "postman"
+              "spotify"
+              "slack"
+              "telegram"
+              "whatsapp"
+              "chatgpt"
+              "zoom"
               "logi-options+"
               "steam"
+              "tableplus"
             ];
           };
           time.timeZone = "Asia/Singapore";

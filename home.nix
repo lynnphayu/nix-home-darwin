@@ -16,7 +16,7 @@
         mkdir -p /Users/${username}/services_data/mysql_data
         mkdir -p /Users/${username}/services_data/redis_data
         mkdir -p /Users/${username}/services_data/mongodb_data
-  
+
         echo "Creating directory for logs"
         mkdir -p /Users/${username}/services_log
 
@@ -42,6 +42,10 @@
         # highlight = "fg=#ff00ff,bg=cyan,bold,underline";
       };
       enableCompletion = true;
+      initExtra = ''
+        # Add Homebrew to PATH
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      '';
     };
     oh-my-posh = {
       enable = true;
