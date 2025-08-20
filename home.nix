@@ -1,15 +1,9 @@
 { username, pkgs, ... }:
 
 {
-  # for sub mods
-  imports = [
-  ];
+  imports = [ ];
   home = {
     activation = {
-      # touch /Users/${username}/services_log/postgres.log
-      # touch /Users/${username}/services_log/mysql.log
-      # touch /Users/${username}/services_log/redis.log
-      # touch /Users/${username}/services_log/mongodb.log
       run = ''
         echo "Creating data directories"
         mkdir -p /Users/${username}/services_data/postgres_data
@@ -28,13 +22,12 @@
     stateVersion = "24.11";
     file = { };
     packages = with pkgs; [
-      nmap
-      ripgrep
-      jq
-      fzf
     ];
   };
   programs = {
+    zoxide = {
+      enable = true;
+    };
     zsh = {
       enable = true;
       autosuggestion = {
@@ -51,6 +44,6 @@
       enable = true;
       useTheme = "half-life";
     };
+    home-manager.enable = true;
   };
-  programs.home-manager.enable = true;
 }

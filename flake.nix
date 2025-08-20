@@ -49,11 +49,23 @@
       };
 
       configuration =
-        { pkgs, ... }:
         {
-          nixpkgs.config.allowUnfree = true;
+          pkgs,
+          home-manager,
+          nix-homebrew,
+          ...
+        }:
+        {
+          nixpkgs = {
+            hostPlatform = system;
+            config.allowUnfree = true;
+          };
           environment.systemPackages = with pkgs; [
             zoxide
+            nmap
+            ripgrep
+            jq
+            fzf
             vim
             neovim
             git
@@ -65,29 +77,9 @@
             air
             pnpm
             nodejs
+            fd
           ];
-          services = {
-            nix-daemon.enable = true;
-            postgresql = {
-              dataDir = "/Users/${username}/services_data/postgres_data";
-              enable = true;
-              package = pkgs.postgresql_17;
-              authentication = "
-	  host    all             all             127.0.0.1/32            trust
-	  local   all             all                                     trust
-	  ";
-              enableTCPIP = true;
-            };
-            redis = {
-              enable = true;
-              package = pkgs.redis;
-              dataDir = "/Users/${username}/services_data/redis_data";
-              extraConfig = ''
-                logfile /Users/${username}/services_log/redis.log
-              '';
-            };
-          };
-
+          services = import ./nix_native_services.nix { inherit username pkgs; };
           launchd.user.agents = {
             postgresql.serviceConfig = {
               StandardErrorPath = "/Users/${username}/services_log/postgres.log";
@@ -121,62 +113,7 @@
             };
 
           };
-          homebrew = {
-            enable = true;
-            onActivation = {
-              autoUpdate = true;
-              upgrade = true;
-              cleanup = "zap";
-            };
-
-            masApps = {
-              # Xcode = 497799835;
-              OktaVerify = 490179405;
-            };
-            taps = [ ];
-            brews = [
-              "wget"
-              "curl"
-              "podman"
-              "git"
-              "tmux"
-              "zsh"
-              "oh-my-posh"
-              "neovim"
-              "maven"
-              "graphviz"
-              "terraform"
-              "localstack"
-              # "mongodb/brew/mongodb-community"
-              # "mongodb/brew/mongosh"
-              # "mongodb/brew/mongodb-database-tools"
-            ];
-            casks = [
-              "studio-3t"
-              "google-chrome"
-              "cursor"
-              "trae"
-              "discord"
-              "stats"
-              "ghostty"
-              # "webull"
-              "podman-desktop"
-              "alfred"
-              "medis"
-              "obsidian"
-              "sequel-ace"
-              "postman"
-              "spotify"
-              "slack"
-              "telegram"
-              "whatsapp"
-              "chatgpt"
-              "zoom"
-              "logi-options+"
-              "steam"
-              "tableplus"
-            ];
-          };
+          homebrew = import ./brew.nix;
           time.timeZone = "Asia/Singapore";
           fonts = {
             packages = with pkgs; [
@@ -190,95 +127,39 @@
               dejavu_fonts
             ];
           };
-          system = {
-            defaults = {
-              NSGlobalDomain = {
-                AppleInterfaceStyleSwitchesAutomatically = true;
-                AppleICUForce24HourTime = true;
-              };
-              loginwindow = {
-                autoLoginUser = "${username}";
-              };
-              menuExtraClock = {
-                Show24Hour = true;
-              };
-              screencapture = {
-                location = "/Users/${username}/Desktop/screenshots";
-              };
-              dock = {
-                autohide = true;
-                autohide-delay = 0.1;
-                orientation = "bottom";
-                show-process-indicators = true;
-                show-recents = false;
-                tilesize = 40;
-                largesize = 50;
-                magnification = true;
-                minimize-to-application = true;
-                persistent-apps = [ ];
-              };
-              WindowManager = {
-                EnableStandardClickToShowDesktop = true;
-                EnableTiledWindowMargins = false;
-              };
-              controlcenter = {
-                Display = true;
-                BatteryShowPercentage = true;
-                Sound = true;
+          system = import ./system_setting.nix { inherit username self; };
+          security.pam.enableSudoTouchIdAuth = true;
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = specialArgs;
+            users.${username} = import ./home.nix;
 
-                NowPlaying = false;
-                AirDrop = false;
-                Bluetooth = false;
-                FocusModes = false;
-              };
-            };
-            configurationRevision = self.rev or self.dirtyRev or null;
-            stateVersion = 5;
           };
-          nixpkgs.hostPlatform = system;
+          nix-homebrew = {
+            enable = true;
+            enableRosetta = true;
+            user = username;
+            taps = {
+              "homebrew/homebrew-core" = homebrew-core;
+              "homebrew/homebrew-cask" = homebrew-cask;
+              "homebrew/homebrew-bundle" = homebrew-bundle;
+            };
+            mutableTaps = false;
+          };
+          users.users.${username} = {
+            home = "/Users/${username}";
+            description = "Personal Nix MacOs configuration";
+          };
         };
     in
     {
       darwinConfigurations."${hostname}" = nix-darwin.lib.darwinSystem {
-        inherit system specialArgs;
         modules = [
           configuration
           home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = specialArgs;
-            users.users.${username} = {
-              home = "/Users/${username}";
-              description = "Personal Nix MacOs configuration";
-            };
-            home-manager.users.${username} = import ./home.nix;
-          }
           inputs.nix-homebrew.darwinModules.nix-homebrew
-          {
-            nix-homebrew = {
-              enable = true;
-              enableRosetta = true;
-              user = username;
-              taps = {
-                "homebrew/homebrew-core" = homebrew-core;
-                "homebrew/homebrew-cask" = homebrew-cask;
-                "homebrew/homebrew-bundle" = homebrew-bundle;
-              };
-              mutableTaps = false;
-            };
-          }
-
-          (
-            { pkgs, lib, ... }:
-            {
-              security.pam.enableSudoTouchIdAuth = true;
-              programs.zsh.enable = true;
-
-            }
-          )
         ];
       };
-      # darwinPackages = self.darwinConfigurations."macbook-pro".packages;
     };
 }
