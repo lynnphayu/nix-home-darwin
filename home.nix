@@ -1,7 +1,13 @@
-{ username, pkgs, ... }:
+{
+  username,
+  pkgs,
+  config,
+  ...
+}:
 
 {
   imports = [ ];
+
   home = {
     activation = {
       run = ''
@@ -19,24 +25,32 @@
       '';
     };
     username = username;
-    stateVersion = "24.11";
-    file = { };
+    stateVersion = "25.11";
     packages = with pkgs; [
+      nodePackages.pnpm
     ];
+    sessionVariables = {
+      PNPM_HOME = "${config.xdg.dataHome}/pnpm";
+    };
+
+    sessionPath = [
+      "${config.xdg.dataHome}/pnpm"
+    ];
+
   };
   programs = {
-    zoxide = {
-      enable = true;
-    };
+    zoxide.enable = true;
     zsh = {
       enable = true;
+
       autosuggestion = {
         enable = true;
         # highlight = "fg=#ff00ff,bg=cyan,bold,underline";
       };
       enableCompletion = true;
-      initExtra = ''
+      initContent = ''
         # Add Homebrew to PATH
+        eval "$(fnm env --use-on-cd --shell zsh)"
         eval "$(/opt/homebrew/bin/brew shellenv)"
       '';
     };

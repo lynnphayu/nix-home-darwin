@@ -1,6 +1,5 @@
 { username, pkgs, ... }:
 {
-  nix-daemon.enable = true;
   postgresql = {
     dataDir = "/Users/${username}/services_data/postgres_data";
     enable = true;

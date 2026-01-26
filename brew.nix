@@ -8,7 +8,9 @@
 
   masApps = {
   };
-  taps = [ ];
+  taps = [
+    "hashicorp/tap"
+  ];
   brews = [
     "wget"
     "curl"
@@ -17,11 +19,13 @@
     "tmux"
     "zsh"
     "oh-my-posh"
-    "neovim"
     "maven"
     "graphviz"
-    "terraform"
+    "hashicorp/tap/terraform"
     "localstack"
+    "helm"
+    "watchman"
+    "k6"
     # "mongodb/brew/mongodb-community"
     # "mongodb/brew/mongosh"
     # "mongodb/brew/mongodb-database-tools"
@@ -46,6 +50,8 @@
     "logi-options+"
     "steam"
     "tableplus"
+    "orbstack"
+    "localsend"
     # "sequel-ace"
     # "whatsapp"
     # "medis"

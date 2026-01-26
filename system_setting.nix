@@ -4,6 +4,7 @@
   ...
 }:
 {
+  primaryUser = username;
   defaults = {
     NSGlobalDomain = {
       AppleInterfaceStyleSwitchesAutomatically = true;

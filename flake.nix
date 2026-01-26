@@ -2,13 +2,13 @@
   description = "Personal Nix MacOs configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-darwin = {
-      url = "github:lnl7/nix-darwin/nix-darwin-24.11";
+      url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
@@ -24,6 +24,10 @@
       url = "github:homebrew/homebrew-bundle";
       flake = false;
     };
+    homebrew-hashicorp-tap = {
+      url = "github:hashicorp/homebrew-tap";
+      flake = false;
+    };
 
   };
 
@@ -32,9 +36,11 @@
       self,
       nix-darwin,
       nixpkgs,
+      nix-homebrew,
       homebrew-core,
       homebrew-cask,
       homebrew-bundle,
+      homebrew-hashicorp-tap,
       home-manager,
       ...
     }:
@@ -75,9 +81,13 @@
             oh-my-posh
             htop
             air
-            pnpm
-            nodejs
+            nodejs_24
+            fnm
             fd
+            k6
+            fastfetch
+            rustup
+            bun
           ];
           services = import ./nix_native_services.nix { inherit username pkgs; };
           launchd.user.agents = {
@@ -117,18 +127,14 @@
           time.timeZone = "Asia/Singapore";
           fonts = {
             packages = with pkgs; [
-              (nerdfonts.override {
-                fonts = [
-                  "FiraCode"
-                  "JetBrainsMono"
-                ];
-              })
+              nerd-fonts.fira-code
+              nerd-fonts.jetbrains-mono
               noto-fonts
               dejavu_fonts
             ];
           };
           system = import ./system_setting.nix { inherit username self; };
-          security.pam.enableSudoTouchIdAuth = true;
+          security.pam.services.sudo_local.touchIdAuth = true;
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
@@ -141,9 +147,10 @@
             enableRosetta = true;
             user = username;
             taps = {
-              "homebrew/homebrew-core" = homebrew-core;
-              "homebrew/homebrew-cask" = homebrew-cask;
-              "homebrew/homebrew-bundle" = homebrew-bundle;
+              "hashicorp/homebrew-tap" = homebrew-hashicorp-tap;
+              "homebrew/core" = homebrew-core;
+              "homebrew/cask" = homebrew-cask;
+              "homebrew/bundle" = homebrew-bundle;
             };
             mutableTaps = false;
           };
