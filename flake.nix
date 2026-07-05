@@ -28,7 +28,14 @@
       url = "github:hashicorp/homebrew-tap";
       flake = false;
     };
-
+    homebrew-spogo-tap = {
+      url = "github:steipete/homebrew-tap";
+      flake = false;
+    };
+    homebrew-manaflow-tap = {
+      url = "github:manaflow-ai/homebrew-cmux";
+      flake = false;
+    };
   };
 
   outputs =
@@ -41,6 +48,8 @@
       homebrew-cask,
       homebrew-bundle,
       homebrew-hashicorp-tap,
+      homebrew-spogo-tap,
+      homebrew-manaflow-tap,
       home-manager,
       ...
     }:
@@ -88,6 +97,9 @@
             fastfetch
             rustup
             bun
+            yarn
+            claude-code
+            opencode
           ];
           services = import ./nix_native_services.nix { inherit username pkgs; };
           launchd.user.agents = {
@@ -147,6 +159,8 @@
             enableRosetta = true;
             user = username;
             taps = {
+              "manaflow-ai/homebrew-cmux" = homebrew-manaflow-tap;
+              "steipete/homebrew-tap" = homebrew-spogo-tap;
               "hashicorp/homebrew-tap" = homebrew-hashicorp-tap;
               "homebrew/core" = homebrew-core;
               "homebrew/cask" = homebrew-cask;

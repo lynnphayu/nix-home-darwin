@@ -7,11 +7,15 @@
   };
 
   masApps = {
+    "1Password 7" = 1333542190;
   };
   taps = [
     "hashicorp/tap"
+    "steipete/tap"
+    "manaflow-ai/cmux"
   ];
   brews = [
+    "mas"
     "wget"
     "curl"
     "podman"
@@ -26,11 +30,14 @@
     "helm"
     "watchman"
     "k6"
+    "steipete/tap/spogo"
+    "pi-coding-agent"
     # "mongodb/brew/mongodb-community"
     # "mongodb/brew/mongosh"
     # "mongodb/brew/mongodb-database-tools"
   ];
   casks = [
+    "1password-cli"
     "studio-3t"
     "google-chrome"
     "cursor"
@@ -52,6 +59,9 @@
     "tableplus"
     "orbstack"
     "localsend"
+    "manaflow-ai/cmux/cmux"
+    "claude"
+    "chatgpt"
     # "sequel-ace"
     # "whatsapp"
     # "medis"

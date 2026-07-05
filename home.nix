@@ -27,7 +27,7 @@
     username = username;
     stateVersion = "25.11";
     packages = with pkgs; [
-      nodePackages.pnpm
+      pnpm
     ];
     sessionVariables = {
       PNPM_HOME = "${config.xdg.dataHome}/pnpm";
