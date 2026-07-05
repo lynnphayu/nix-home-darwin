@@ -48,6 +48,9 @@
         # highlight = "fg=#ff00ff,bg=cyan,bold,underline";
       };
       enableCompletion = true;
+      shellAliases = {
+        pi = ''op run --env-file="$HOME/.config/pi/secrets.env" --no-masking -- pi'';
+      };
       initContent = ''
         # Add Homebrew to PATH
         eval "$(fnm env --use-on-cd --shell zsh)"

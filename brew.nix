@@ -7,15 +7,16 @@
   };
 
   masApps = {
-    "1Password 7" = 1333542190;
   };
   taps = [
+    "homebrew/core"
+    "homebrew/cask"
+    "homebrew/bundle"
     "hashicorp/tap"
     "steipete/tap"
     "manaflow-ai/cmux"
   ];
   brews = [
-    "mas"
     "wget"
     "curl"
     "podman"
@@ -37,6 +38,7 @@
     # "mongodb/brew/mongodb-database-tools"
   ];
   casks = [
+    "1password"
     "1password-cli"
     "studio-3t"
     "google-chrome"
