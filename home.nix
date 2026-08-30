@@ -2,6 +2,7 @@
   username,
   pkgs,
   config,
+  lib,
   ...
 }:
 
@@ -51,11 +52,16 @@
       shellAliases = {
         pi = ''op run --env-file="$HOME/.config/pi/secrets.env" --no-masking -- pi'';
       };
-      initContent = ''
-        # Add Homebrew to PATH
-        eval "$(fnm env --use-on-cd --shell zsh)"
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-      '';
+      initContent = lib.mkMerge [
+        # Homebrew must be on PATH before compinit so its completions load
+        (lib.mkOrder 550 ''
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          fpath+=(/opt/homebrew/share/zsh/site-functions)
+        '')
+        ''
+          eval "$(fnm env --use-on-cd --shell zsh)"
+        ''
+      ];
     };
     oh-my-posh = {
       enable = true;
