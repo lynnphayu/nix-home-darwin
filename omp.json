@@ -1,0 +1,84 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground": "#4169E1",
+          "properties": {
+            "style": "full"
+          },
+          "style": "diamond",
+          "template": "<b>{{ .Path }}</b>",
+          "type": "path"
+        },
+        {
+          "background": "transparent",
+          "foreground": "green",
+          "template": "{{ if .Env.TMUX }} tmux»{{ end }}",
+          "type": "text",
+          "style": "plain"
+        },
+        {
+          "type": "git",
+          "style": "diamond",
+          "foreground": "#ffeb3b",
+          "background": "transparent",
+          "foreground_templates": [
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#FFEB3B{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFCC80{{ end }}",
+            "{{ if gt .Ahead 0 }}#B388FF{{ end }}",
+            "{{ if gt .Behind 0 }}#B388FB{{ end }}"
+          ],
+          "template": " {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}",
+          "properties": {
+            "branch_icon": "",
+            "fetch_status": true,
+            "source": "cli"
+          }
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "type": "prompt",
+      "alignment": "right",
+      "segments": [
+        {
+          "type": "command",
+          "style": "plain",
+          "background": "transparent",
+          "foreground": "grey",
+          "properties": {
+            "shell": "bash",
+            "command": "git log --pretty=format:%cr -1 || date +%H:%M:%S"
+          }
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground_templates": [
+            "{{if gt .Code 0}}red{{end}}",
+            "{{if eq .Code 0}}#0bda51{{end}}"
+          ],
+          "style": "plain",
+          "template": "<b>❱</b> ",
+          "type": "text"
+        }
+      ],
+      "type": "prompt"
+    }
+  ],
+  "version": 3,
+  "transient_prompt": {
+    "background": "transparent",
+    "foreground": "#0bda51",
+    "template": "<b>❱</b> "
+  }
+}

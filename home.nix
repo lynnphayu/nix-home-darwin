@@ -65,7 +65,7 @@
     };
     oh-my-posh = {
       enable = true;
-      useTheme = "half-life";
+      settings = builtins.fromJSON (builtins.readFile ./omp.json);
     };
     home-manager.enable = true;
   };
