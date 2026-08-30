@@ -33,6 +33,7 @@
     "k6"
     "steipete/tap/spogo"
     "pi-coding-agent"
+    "herdr"
     # "mongodb/brew/mongodb-community"
     # "mongodb/brew/mongosh"
     # "mongodb/brew/mongodb-database-tools"
