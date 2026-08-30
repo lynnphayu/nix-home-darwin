@@ -136,6 +136,11 @@
 
           };
           homebrew = import ./brew.nix;
+          networking = {
+            hostName = hostname;
+            localHostName = hostname;
+            computerName = hostname;
+          };
           time.timeZone = "Asia/Singapore";
           fonts = {
             packages = with pkgs; [
